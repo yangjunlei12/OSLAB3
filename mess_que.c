@@ -49,7 +49,7 @@ void * sender() {
     char input[100];
     struct msgbuf msg;
     msg.mtype = 1;
-    printf("hello sender\n");
+    
     while(1) {
         sem_wait(&empty);
         sem_wait(&mutex);
@@ -75,10 +75,7 @@ void * sender() {
     memset(&msg, '\0', sizeof(msgbuf));
     msgrcv(msgid, &msg, sizeof(msgbuf), 2, 0);
     printf("END: %s\n", msg.mtext);
-    if(msgctl(msgid, IPC_RMID, 0) == -1) {
-        fprintf(stderr, "Remove Message Queue Error %s\n", strerror(errno));
-        exit(EXIT_FAILURE);
-    }
+    
     exit(EXIT_SUCCESS);
 }
 
