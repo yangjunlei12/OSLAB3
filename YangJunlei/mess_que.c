@@ -76,6 +76,10 @@ void * sender() {
     msgrcv(msgid, &msg, sizeof(msgbuf), 2, 0);
     printf("END: %s\n", msg.mtext);
     
+    if(msgctl(msgid, IPC_RMID, 0) == -1){
+        
+        exit(EXIT_FAILURE);
+    }
     exit(EXIT_SUCCESS);
 }
 
