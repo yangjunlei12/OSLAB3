@@ -77,7 +77,7 @@ void * sender() {
     printf("END: %s\n", msg.mtext);
     
     if(msgctl(msgid, IPC_RMID, 0) == -1){
-        
+        fprintf(stderr, "Remove Message Queue Error %s\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);
