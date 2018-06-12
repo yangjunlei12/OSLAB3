@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <erron.h>
+#include <errno.h>
 #include <semaphore.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -54,7 +54,7 @@ int main() {
         sem_wait(&mutex);
         close(fd[0]);
 
-        char message[Max] = "Child process1's message\n";
+        char message[Max] = "Child process3's message\n";
         write(fd[1], message, sizeof(message));
 
         sem_post(&mutex);
