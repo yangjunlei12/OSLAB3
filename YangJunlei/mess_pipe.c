@@ -62,19 +62,22 @@ int main() {
         sem_post(&mutex);
     }
 
-    wait(0);
+    
     if(getpid() == current_pid &&
 	pid[0] != -1 && pid[1] != -1 && pid[2] != -1){
         char buf[Max];
     // 1
+	wait(0);
         close(fd[1]);
         read(fd[0], buf, sizeof(buf));
         printf("%s", buf);
     //2
+	wait(0);
         close(fd[1]);
         read(fd[0], buf, sizeof(buf));
         printf("%s", buf);
     //3
+	wait(0);
         close(fd[1]);
         read(fd[0], buf, sizeof(buf));
         printf("%s", buf);
