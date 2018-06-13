@@ -23,7 +23,7 @@ int main() {
     sem_init(&mutex, 1, 1);
     sem_init(&full, 1, 3);
     int fd[2];
-    pid_t pid[3] = {-1, -1, -1} ;
+    pid_t pid[3];
     pid_t current_pid = getpid();
     check_err(pipe(fd));
 
@@ -39,57 +39,54 @@ int main() {
         sem_post(&mutex);
         exit(0);
     }
-    else {
-        pid[1] = fork();
-        check_err(pid[1]);
-        if(pid[1] == 0) {
-            sem_wait(&mutex);
-            close(fd[0]);
+    
+    pid[1] = fork();
+    check_err(pid[1]);
+    if(pid[1] == 0) {
+        sem_wait(&mutex);
+        close(fd[0]);
 
-            char message[Max] = "Child process2's message\n";
-            write(fd[1], message, sizeof(message));
-            printf("child 2 sending message\n");
-            sem_post(&mutex);
-            exit(0);
-        }
-        else {
-            pid[2] = fork();
-            check_err(pid[2]);
-            if(pid[2] == 0) {
-                sem_wait(&mutex);
-                close(fd[0]);
+        char message[Max] = "Child process2's message\n";
+        write(fd[1], message, sizeof(message));
+        printf("child 2 sending message\n");
+        sem_post(&mutex);
+        exit(0);
+    }
+        
+    pid[2] = fork();
+    check_err(pid[2]);
+    if(pid[2] == 0) {
+        sem_wait(&mutex);
+        close(fd[0]);
 
-                char message[Max] = "Child process3's message\n";
-                write(fd[1], message, sizeof(message));
-                printf("child 3 sending message\n");
-                sem_post(&mutex);
-                exit(0);
-            }
-            else {
+        char message[Max] = "Child process3's message\n";
+        write(fd[1], message, sizeof(message));
+        printf("child 3 sending message\n");
+        sem_post(&mutex);
+        exit(0);
+    }
             
-                if(getpid() == current_pid &&
-                pid[0] != -1 && pid[1] != -1 && pid[2] != -1){
-                    char buf[Max];
-                // 1
-                    wait(0);
-                    close(fd[1]);
-                    read(fd[0], buf, sizeof(buf));
-                    printf("expect child 1:  %s", buf);
-                //2
-                    wait(0);
-                    close(fd[1]); 
-                    read(fd[0], buf, sizeof(buf));
-                    printf("expect child 2: %s", buf);
-                //3
-                    wait(0);
-                    close(fd[1]);
-                    read(fd[0], buf, sizeof(buf));
-                    printf("expect child 3: %s", buf);
+    
+    if(getpid() == current_pid){
+        char buf[Max];
+    // 1
+        wait(0);
+        close(fd[1]);
+        read(fd[0], buf, sizeof(buf));
+        printf("expect child 1:  %s", buf);
+    //2
+        wait(0);
+        close(fd[1]); 
+        read(fd[0], buf, sizeof(buf));
+        printf("expect child 2: %s", buf);
+    //3
+        wait(0);
+        close(fd[1]);
+        read(fd[0], buf, sizeof(buf));
+        printf("expect child 3: %s", buf);
 
 //                    exit(0);
-                }
-            }
-        }
     }
+ 
     return 0;
 }
