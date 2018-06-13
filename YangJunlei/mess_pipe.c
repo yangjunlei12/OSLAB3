@@ -19,8 +19,9 @@ void check_err(int err) {
 }
 
 int main() {
-    sem_t mutex;
+    sem_t mutex, full;
     sem_init(&mutex, 1, 1);
+    sem_init(&full, 1, 3);
     int fd[2];
     pid_t pid[3] = {-1, -1, -1} ;
     pid_t current_pid = getpid();
@@ -73,19 +74,19 @@ int main() {
                     wait(0);
                     close(fd[1]);
                     read(fd[0], buf, sizeof(buf));
-                    printf("%s", buf);
+                    printf("expect child 1:  %s", buf);
                 //2
                     wait(0);
                     close(fd[1]); 
                     read(fd[0], buf, sizeof(buf));
-                    printf("%s", buf);
+                    printf("expect child 2: %s", buf);
                 //3
                     wait(0);
                     close(fd[1]);
                     read(fd[0], buf, sizeof(buf));
-                    printf("%s", buf);
+                    printf("expect child 3: %s", buf);
 
-                    exit(0);
+//                    exit(0);
                 }
             }
         }
