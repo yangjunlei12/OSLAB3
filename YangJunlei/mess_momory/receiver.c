@@ -1,4 +1,4 @@
-#include <share_momery.h>
+#include "share_momery.h"
 
 int main() {
     int shmid = shmget(KEY_NUM, 1024, 0666|IPC_CREAT);
@@ -19,13 +19,13 @@ int main() {
     strcpy(result, shmp);
     sem_post(mutex);
     
-    printf("received message: %s\n", result)
+    printf("received message: %s\n", result);
 
     sem_close(mutex);
-    sem_unlink("mutex_shm")
+    sem_unlink("mutex_shm");
 
     sem_close(full);
-    sem_unlink("mutex_shm")
+    sem_unlink("mutex_shm");
 
     return 0;
 }

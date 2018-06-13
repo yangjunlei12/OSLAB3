@@ -1,4 +1,4 @@
-#include <share_momery.h>
+#include "share_momery.h"
 
 int main() {
     int shmid = shmget(KEY_NUM, 1024, 0666|IPC_CREAT);
