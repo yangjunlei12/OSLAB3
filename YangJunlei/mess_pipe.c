@@ -37,50 +37,53 @@ int main() {
         printf("child 1 sending message\n");
         sem_post(&mutex);
     }
+    else {
+        pid[1] = fork();
+        check_err(pid[1]);
+        if(pid[1] == 0) {
+            sem_wait(&mutex);
+            close(fd[0]);
 
-    pid[1] = fork();
-    check_err(pid[1]);
-    if(pid[1] == 0) {
-        sem_wait(&mutex);
-        close(fd[0]);
+            char message[Max] = "Child process2's message\n";
+            write(fd[1], message, sizeof(message));
+        printf("child 2 sending message\n");
+            sem_post(&mutex);
+        }
+        else {
+            pid[2] = fork();
+            check_err(pid[2]);
+            if(pid[2] == 0) {
+                sem_wait(&mutex);
+                close(fd[0]);
 
-        char message[Max] = "Child process2's message\n";
-        write(fd[1], message, sizeof(message));
-	printf("child 2 sending message\n");
-        sem_post(&mutex);
-    }
-
-    pid[2] = fork();
-    check_err(pid[2]);
-    if(pid[2] == 0) {
-        sem_wait(&mutex);
-        close(fd[0]);
-
-        char message[Max] = "Child process3's message\n";
-        write(fd[1], message, sizeof(message));
-	printf("child 3 sending message\n");
-        sem_post(&mutex);
-    }
-
-    
-    if(getpid() == current_pid &&
-	pid[0] != -1 && pid[1] != -1 && pid[2] != -1){
-        char buf[Max];
-    // 1
-	wait(0);
-        close(fd[1]);
-        read(fd[0], buf, sizeof(buf));
-        printf("%s", buf);
-    //2
-	wait(0);
-        close(fd[1]);
-        read(fd[0], buf, sizeof(buf));
-        printf("%s", buf);
-    //3
-	wait(0);
-        close(fd[1]);
-        read(fd[0], buf, sizeof(buf));
-        printf("%s", buf);
+                char message[Max] = "Child process3's message\n";
+                write(fd[1], message, sizeof(message));
+            printf("child 3 sending message\n");
+                sem_post(&mutex);
+            }
+            else {
+            
+                if(getpid() == current_pid &&
+                pid[0] != -1 && pid[1] != -1 && pid[2] != -1){
+                    char buf[Max];
+                // 1
+                wait(0);
+                    close(fd[1]);
+                    read(fd[0], buf, sizeof(buf));
+                    printf("%s", buf);
+                //2
+                wait(0);
+                    close(fd[1]);
+                    read(fd[0], buf, sizeof(buf));
+                    printf("%s", buf);
+                //3
+                wait(0);
+                    close(fd[1]);
+                    read(fd[0], buf, sizeof(buf));
+                    printf("%s", buf);
+                }
+            }
+        }
     }
     return 0;
 }
