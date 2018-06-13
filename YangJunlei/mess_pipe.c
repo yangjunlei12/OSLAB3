@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 #include <semaphore.h>
@@ -18,7 +19,7 @@ void check_err(int err) {
 
 int main() {
     sem_t mutex;
-    sem_init(&mutex, 0, 1);
+    sem_init(&mutex, 1, 1);
     int fd[2];
     pid_t pid[3];
 
@@ -32,7 +33,7 @@ int main() {
 
         char message[Max] = "Child process1's message\n";
         write(fd[1], message, sizeof(message));
-
+        printf("child 1 seding message\n");
         sem_post(&mutex);
     }
 
@@ -44,7 +45,7 @@ int main() {
 
         char message[Max] = "Child process2's message\n";
         write(fd[1], message, sizeof(message));
-
+	printf("child 2 sending message");
         sem_post(&mutex);
     }
 
@@ -56,7 +57,7 @@ int main() {
 
         char message[Max] = "Child process3's message\n";
         write(fd[1], message, sizeof(message));
-
+	printf("child 3 sending message");
         sem_post(&mutex);
     }
 
@@ -66,11 +67,11 @@ int main() {
     read(fd[0], buf, sizeof(buf));
     printf("%s", buf);
     //2
-    close(fd[1]);
+    // close(fd[1]);
     read(fd[0], buf, sizeof(buf));
     printf("%s", buf);
     //3
-    close(fd[1]);
+    //close(fd[1]);
     read(fd[0], buf, sizeof(buf));
     printf("%s", buf);
 
