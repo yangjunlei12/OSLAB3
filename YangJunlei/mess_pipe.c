@@ -36,6 +36,7 @@ int main() {
         write(fd[1], message, sizeof(message));
         printf("child 1 sending message\n");
         sem_post(&mutex);
+        exit(0);
     }
     else {
         pid[1] = fork();
@@ -46,8 +47,9 @@ int main() {
 
             char message[Max] = "Child process2's message\n";
             write(fd[1], message, sizeof(message));
-        printf("child 2 sending message\n");
+            printf("child 2 sending message\n");
             sem_post(&mutex);
+            exit(0);
         }
         else {
             pid[2] = fork();
@@ -58,8 +60,9 @@ int main() {
 
                 char message[Max] = "Child process3's message\n";
                 write(fd[1], message, sizeof(message));
-            printf("child 3 sending message\n");
+                printf("child 3 sending message\n");
                 sem_post(&mutex);
+                exit(0);
             }
             else {
             
@@ -67,20 +70,22 @@ int main() {
                 pid[0] != -1 && pid[1] != -1 && pid[2] != -1){
                     char buf[Max];
                 // 1
-                wait(0);
+                    wait(0);
                     close(fd[1]);
                     read(fd[0], buf, sizeof(buf));
                     printf("%s", buf);
                 //2
-                wait(0);
-                    close(fd[1]);
+                    wait(0);
+                    close(fd[1]); 
                     read(fd[0], buf, sizeof(buf));
                     printf("%s", buf);
                 //3
-                wait(0);
+                    wait(0);
                     close(fd[1]);
                     read(fd[0], buf, sizeof(buf));
                     printf("%s", buf);
+
+                    exit(0);
                 }
             }
         }
