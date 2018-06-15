@@ -66,24 +66,26 @@ int main() {
         exit(0);
     }
             
-    
+    waitpid(pid[0], &status, 0);
+    waitpid(pid[1], &status, 0);
+    waitpid(pid[2], &status, 0);
     if(getpid() == current_pid){
         char buf[Max];
     // 1
         wait(0);
         close(fd[1]);
         read(fd[0], buf, sizeof(buf));
-        printf("expect child 1:  %s", buf);
+        printf("%s", buf);
     //2
         wait(0);
         close(fd[1]); 
         read(fd[0], buf, sizeof(buf));
-        printf("expect child 2: %s", buf);
+        printf("%s", buf);
     //3
         wait(0);
         close(fd[1]);
         read(fd[0], buf, sizeof(buf));
-        printf("expect child 3: %s", buf);
+        printf("%s", buf);
 
 //                    exit(0);
     }
